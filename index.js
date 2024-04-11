@@ -27,9 +27,11 @@ app.post('/signup',
         await controllers.signup(req, res)
     }
 );
-app.get('/login', function (req, res) {
-    res.send('Login Page');
-});
+app.post('/login', 
+    async (req, res) => {
+        await controllers.login(req, res)
+    }
+);
 app.get('/forgot-password', function (req, res) {
     res.send('Forgot Password Page');
 }
