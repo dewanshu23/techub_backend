@@ -1,5 +1,6 @@
 const models = require('../models/index.js');
 const bcrypt = require('bcryptjs');
+const e = require('express');
 const JWT = require('jsonwebtoken');
 
 const login = async (req, res) => {
@@ -28,7 +29,7 @@ const login = async (req, res) => {
         const token = JWT.sign({ email: existingUser.email }, JWT_SECRET, { expiresIn: '168h' });
 
         // Send token in response
-        res.status(200).json({ message: 'Login successful', token, });
+        res.status(200).json({ message: 'Login successful', token, user_data: existingUser});
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });
