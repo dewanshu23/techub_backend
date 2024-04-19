@@ -19,5 +19,57 @@ const userModel = `CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );`;
 
+const loginActivityModel = `CREATE TABLE IF NOT EXISTS login_activity (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    login_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    logout_time TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);`;
+
+const postModel = `CREATE TABLE IF NOT EXISTS posts (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    post_content TEXT NOT NULL,
+    post_image TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);`;
+
+const commentModel = `CREATE TABLE IF NOT EXISTS comments (
+    id SERIAL PRIMARY KEY,
+    post_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    comment TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES posts(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);`;
+
+const likeModel = `CREATE TABLE IF NOT EXISTS likes (
+    id SERIAL PRIMARY KEY,
+    post_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES posts(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);`;
+
+const followModel = `CREATE TABLE IF NOT EXISTS follows (
+    id SERIAL PRIMARY KEY,
+    follower_id INTEGER NOT NULL,
+    following_id INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (follower_id) REFERENCES users(id),
+    FOREIGN KEY (following_id) REFERENCES users(id)
+);`;
+
+dbStrings.loginActivityModel = loginActivityModel;
+dbStrings.postModel = postModel;
+dbStrings.commentModel = commentModel;
+dbStrings.likeModel = likeModel;
+dbStrings.followModel = followModel;
 dbStrings.userModel = userModel;
 module.exports = dbStrings;

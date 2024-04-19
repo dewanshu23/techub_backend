@@ -32,9 +32,41 @@ app.post('/login',
         await controllers.login(req, res)
     }
 );
+
+app.post('/post',
+
+    async (req, res) => {
+        await controllers.post(req, res)
+    }   
+);
+
+app.get('/getPostsForUser',
+
+
+    async (req, res) => {
+        await controllers.getPostsForUser(req, res)
+    }
+);
+
+app.get('/getAllPosts',
+    
+        async (req, res) => {
+            await controllers.getAllPosts(req, res)
+        }
+    );
+app.get('/verify-email', function (req, res) {  
+    res.send('Verify Email Page');
+}   
+);
 app.get('/forgot-password', function (req, res) {
     res.send('Forgot Password Page');
 }
+);
+
+app.get('/reset-password', function (req, res) {
+    res.send('Reset Password Page');
+}
+
 );
 app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
