@@ -1,5 +1,8 @@
 const signup = require('./signup');
 const login = require('./login');
+const posts = require('./posts');
+const users = require('./users');
+// const loginActivity = require('./login_activity');
 // const forgotPassword = require('./forgot-password');
 // const resetPassword = require('./reset-password');
 // const verifyEmail = require('./verify-email');
@@ -11,6 +14,8 @@ const login = require('./login');
 module.exports = {
     signup,
     login,
+    posts,
+    users
     // forgotPassword,
     // resetPassword,
     // verifyEmail,

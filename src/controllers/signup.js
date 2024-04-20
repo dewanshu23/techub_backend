@@ -36,7 +36,7 @@ const signup = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Create a new user
-        const query = `INSERT INTO users (name, email, password, stream, passout, year, userrole, isverified, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`;
+        const query = `INSERT INTO users (name, email, password, stream, passout, year, userrole, isverified) VALUES ($1, $2, $3, $4, $5, $6, $7, false)`;
         const client = await models.pool.connect();
         const results = await client.query(query, [name, email, hashedPassword, stream, passout, year, userRole]);
         client.release();
