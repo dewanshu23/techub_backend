@@ -22,6 +22,8 @@ app.set('port', 3000);
 app.get('/', function (req, res) {
     res.send('Hello World!');
 });
+
+// auth routes
 app.post('/signup',
     async (req, res) => {
         await controllers.signup(req, res)
@@ -33,6 +35,25 @@ app.post('/login',
     }
 );
 
+app.get('/verify-email',
+    function (req, res) {
+        res.send('Verify Email Page');
+    }
+);
+
+app.get('/forgot-password',
+    function (req, res) {
+        res.send('Forgot Password Page');
+    }
+);
+
+app.get('/reset-password',
+    function (req, res) {
+        res.send('Reset Password Page');
+    }
+);
+
+// post routes for alumini and student
 app.post('/post',
     async (req, res) => {
         await controllers.posts.post(req, res)
@@ -51,6 +72,7 @@ app.get('/getAllPosts',
     }
 );
 
+// user list routes
 app.get('/getAllAluminis',
     async (req, res) => {
         await controllers.users.getAllAluminis(req, res)
@@ -97,25 +119,6 @@ app.get('/unfollowStudent',
 
     async (req, res) => {
         await controllers.users.unfollowStudent(req, res)
-    }
-);
-
-
-app.get('/verify-email',
-    function (req, res) {
-        res.send('Verify Email Page');
-    }
-);
-
-app.get('/forgot-password',
-    function (req, res) {
-        res.send('Forgot Password Page');
-    }
-);
-
-app.get('/reset-password',
-    function (req, res) {
-        res.send('Reset Password Page');
     }
 );
 
