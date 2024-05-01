@@ -66,10 +66,23 @@ const followModel = `CREATE TABLE IF NOT EXISTS follows (
     FOREIGN KEY (following_id) REFERENCES users(id)
 );`;
 
+const socialMediaModel = `CREATE TABLE IF NOT EXISTS social_media (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    facebook TEXT,
+    instagram TEXT,
+    linkedin TEXT,
+    twitter TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);`;
+
 dbStrings.loginActivityModel = loginActivityModel;
 dbStrings.postModel = postModel;
 dbStrings.commentModel = commentModel;
 dbStrings.likeModel = likeModel;
 dbStrings.followModel = followModel;
 dbStrings.userModel = userModel;
+dbStrings.socialMediaModel = socialMediaModel;
 module.exports = dbStrings;

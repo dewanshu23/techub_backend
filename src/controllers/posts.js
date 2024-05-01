@@ -4,11 +4,11 @@ const post = async (req, res) => {
     try {
         // body conatains email, password fields 
         console.log(req.body);
-        const { post_content, post_image } = req.body;
-        console.log(post_content, post_image);
+        const { post_content, post_image, user_id } = req.body;
+        console.log(post_content, post_image,  user_id);
         // Check for existing user
-        let existingUser = await checkLogin(req.user.email);
-        const results = await models.pool.query(`INSERT INTO posts (user_id, post_content, post_image) VALUES ($1, $2, $3)`, [existingUser.id, post_content, post_image]);
+        // let existingUser = await checkLogin(req.user.email);
+        const results = await models.pool.query(`INSERT INTO posts (user_id, post_content, post_image) VALUES ($1, $2, $3)`, [user_id, post_content, post_image]);
         if (!results) {
             return res.status(400).json({ message: 'Post failed' });
         }
