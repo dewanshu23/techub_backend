@@ -1,16 +1,13 @@
 const express = require('express');
 const app = express();
-const controllers = require('./src/controllers/index.js');
+const src = require('./src/index.js');
+const controllers = src.controllers;
 //
 //connect db from models folder
-const { dbStrings, pool } = require('./src/models/index.js');
-console.log(dbStrings['userModel'])
-pool.connect().then((client) => {
-    client.query(dbStrings['userModel'], (err, res) => {
-        console.log(err, res)
-        console.log('Connected to the database');
-        client.release();
-    })
+const models = src.models;
+
+models.processIndexFile().then(() => {
+    console.log("DB segtup and checkup done");
 });
 
 

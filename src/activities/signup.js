@@ -5,6 +5,7 @@ const models = require('../models/index.js');
 const Joi = require('@hapi/joi');
 const bcrypt = require('bcryptjs');
 const validator = require("../validations")
+const logEntry = require('./logEntry.js');
 
 const signup = async (req, res) => {
     const joiOptions = {
@@ -17,6 +18,7 @@ const signup = async (req, res) => {
         // Validate the request body
         const resultValidation=await Joi.validate(req.body, validator.accountValidator.userAccountSignupSchema, joiOptions);      
         if(resultValidation.isJoi===true){
+            await logEntry({ user_id: 0, activity: 'Signup failed Validation error' });
             return res.status(400).json({ message: resultValidation.error.details.map(x=>x.message).join(', ') });
         }  
         console.log("validated");
@@ -29,6 +31,7 @@ const signup = async (req, res) => {
         // Check for existing user
         const existingUser = await checkSignup(email);
         if (existingUser) {
+            await logEntry({ user_id: existingUser.id , activity: 'Signup failed Email ' + email + ' already exists' });
             return res.status(400).json({ message: 'Email already exists' });
         }
 
@@ -42,11 +45,14 @@ const signup = async (req, res) => {
         client.release();
         console.log(results);
         if(results.rowCount===0){
+            await logEntry({ user_id: 0, activity: 'Signup failed Email ' + email + ' not created' });
             return res.status(400).json({ message: 'User not created' });
         }
+        await logEntry({ user_id: results.rows[0].id, activity: 'Signup successful for email ' + email });
         res.status(201).json({ message: 'User created successfully' });
     } catch (err) {
         console.error(err);
+        await logEntry({ user_id: 0, activity: 'Signup failed Internal server error' });
         res.status(500).json({ message: 'Internal server error' });
     }
 };
