@@ -47,10 +47,12 @@ const login = async (req, res) => {
 const checkUser = async (email) => {
     try {
         // Check for existing user in db if exists
-        console.log(email);
         const query = `SELECT * FROM users WHERE email = $1`;
-        const { rows } = await models.runner(query, [email]);
-        console.log(rows);
+        const client = await models.pool.connect();
+        const results = await client.query(query, [email]);
+        client.release();
+        const { rows } = results;
+        console.log(rows)
         if (rows.length) {
             return rows[0];
         }

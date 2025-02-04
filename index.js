@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const src = require('./src/index.js');
-const controllers = src.controllers;
+const controllers = src.activities;
 //
 //connect db from models folder
 const models = src.models;
@@ -23,6 +23,7 @@ app.get('/', function (req, res) {
 // auth routes
 app.post('/signup',
     async (req, res) => {
+        console.log("was i called");
         await controllers.signup(req, res)
     }
 );

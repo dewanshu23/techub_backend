@@ -31,6 +31,9 @@ const changePasswordSchema = Joi.object({
   password: Joi.string().required(),
   confirmPassword: Joi.string().required().valid(Joi.ref("password")).label("Confirm password").error(() => 'password and Confirm password not same.')
 });
+const post = Joi.object({
+
+})
 module.exports ={
   userAccountSignupSchema,
   userAccountLoginSchema,

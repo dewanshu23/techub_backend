@@ -26,13 +26,11 @@ const signup = async (req, res) => {
         // body conatains name, email, password, stream, passout, year, userrole, isverified fields 
         const { name, email, password, stream, passout, year, userRole } = req.body;
 
-
-
         // Check for existing user
         const existingUser = await checkSignup(email);
         if (existingUser) {
             await logEntry({ user_id: existingUser.id , activity: 'Signup failed Email ' + email + ' already exists' });
-            return res.status(400).json({ message: 'Email already exists' });
+            return res.status(200).json({ message: 'Email already exists' });
         }
 
         // Hash the password
@@ -48,6 +46,12 @@ const signup = async (req, res) => {
             await logEntry({ user_id: 0, activity: 'Signup failed Email ' + email + ' not created' });
             return res.status(400).json({ message: 'User not created' });
         }
+
+        // get new user in db for login activity
+        query = `SELECT * FROM users WHERE email = $1`;
+        client = await models.pool.connect();
+        results = await client.query(query, [email]);
+        client.release(); 
         await logEntry({ user_id: results.rows[0].id, activity: 'Signup successful for email ' + email });
         res.status(201).json({ message: 'User created successfully' });
     } catch (err) {
