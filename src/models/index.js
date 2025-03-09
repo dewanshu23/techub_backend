@@ -4,9 +4,9 @@ const dbStrings = require("./createModels.js");
 
 let pool = new Pool({
   user: "postgres",
+  password: 'sith1234',//change according to your password TODO: change to basic
   host: "localhost",
   database: "test_techub",
-  password: 'sith1234',//change according to your password TODO: change to basic
   port: 5432,
   max: 1000,
   logging: false,

@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const src = require('./src/index.js');
 const controllers = src.activities;
@@ -10,12 +11,13 @@ models.processIndexFile().then(() => {
     console.log("DB segtup and checkup done");
 });
 
-
-app.use(express.json());  // For JSON bodies
+app.use(cors());
+app.use(express.json(
+));  // For JSON bodies
 app.use(express.urlencoded({ extended: true })); // For URL-encoded bodies
 // app.use(express.static('public')); // For serving static files
 //connect routes from routes folder
-app.set('port', 3000);
+app.set('port', 7070);
 app.get('/', function (req, res) {
     res.send('Hello World!');
 });
