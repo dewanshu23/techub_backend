@@ -2,7 +2,7 @@ const models = require('../models/index.js');
 
 const getAllAluminis = async (req, res) => {
     try {
-        const results = await models.pool.query(`SELECT * FROM users WHERE role = 'alumini'`);
+        const results = await models.pool.query(`SELECT * FROM users WHERE userrole = 'Alumini'`);
         if (!results) {
             return res.status(400).json({ message: 'No alumini found' });
         }
@@ -16,7 +16,7 @@ const getAllAluminis = async (req, res) => {
 
 const getAllStudents = async (req, res) => {
     try {
-        const results = await models.pool.query(`SELECT * FROM users WHERE role = 'student'`);
+        const results = await models.pool.query(`SELECT * FROM users WHERE userrole = 'Student'`);
         if (!results) {
             return res.status(400).json({ message: 'No students found' });
         }
