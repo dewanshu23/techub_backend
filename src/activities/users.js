@@ -1,4 +1,5 @@
 const models = require('../models/index.js');
+const logEntry = require('./logEntry.js');
 
 const getAllAluminis = async (req, res) => {
     try {
@@ -18,12 +19,15 @@ const getAllStudents = async (req, res) => {
     try {
         const results = await models.pool.query(`SELECT * FROM users WHERE userrole = 'Student'`);
         if (!results) {
+            logEntry({ user_id: 0, activity: 'No students found. requested by ' + req.body.id ?? "admin" });
             return res.status(400).json({ message: 'No students found' });
         }
+        logEntry({ user_id: 0, activity: 'Students found. requested by ' + req.body.id ?? "admin" });
         return res.status(200).json({ message: 'Students found', students: results.rows });
     }
     catch (err) {
         console.error(err);
+        logEntry({ user_id: 0, activity: 'Students not found. requested by ' + req.body.id ?? "admin" + ' err: ' + err });
         res.status(500).json({ message: 'Internal server error' });
     }
 }
@@ -56,6 +60,10 @@ const getAllFollowedStudentsByAlumini = async (req, res) => {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });
     }
+}
+
+const updateUser = async (req, res) => {
+    
 }
 
 const followAlumini = async (req, res) => {

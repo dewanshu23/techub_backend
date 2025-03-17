@@ -27,7 +27,7 @@ const post = async (req, res) => {
 const getPostsForUser = async (req, res) => {
     try {
         // Check for existing user
-        let existingUser = await checkLogin(req.user.email);
+        let existingUser = await checkLogin(req.body.email);
         const results = await models.pool.query(`SELECT * FROM posts WHERE user_id = $1`, [existingUser.id]);
         if (!results) {
             await logEntry({ user_id: existingUser.id, activity: 'No posts found for userid ' + existingUser.id });
@@ -47,15 +47,15 @@ const getAllPosts = async (req, res) => {
     try {
         const results = await models.pool.query(`SELECT * FROM posts`);
         if (!results) {
-            await logEntry({ user_id: 0, activity: 'No posts created yet asked by ' + req.user.id });
+            await logEntry({ user_id: 0, activity: 'No posts created yet asked by ' + req.body.id??"admin" });
             return res.status(400).json({ message: 'No posts found' });
         }
-        await logEntry({ user_id: 0, activity: 'All Posts found and sent to user id ' + req.user.id });
+        await logEntry({ user_id: 0, activity: 'All Posts found and sent to user id ' + req.body.id??"admin" });
         return res.status(200).json({ message: 'Posts found', posts: results.rows });
     }
     catch (err) {
         console.error(err);
-        await logEntry({ user_id: 0, activity: 'Post failed Internal server error; asked by ' + req.user.id + ' err: ' + err });
+        await logEntry({ user_id: 0, activity: 'Post failed Internal server error; asked by ' + req.body.id??"admin" + ' err: ' + err });
         res.status(500).json({ message: 'Internal server error' });
     }
 }
