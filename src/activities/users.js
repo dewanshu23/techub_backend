@@ -62,8 +62,42 @@ const getAllFollowedStudentsByAlumini = async (req, res) => {
     }
 }
 
+/** 
+const userModel = `CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY NOT NULL,
+    name VARCHAR(200),
+    email VARCHAR(100) UNIQUE,
+    password VARCHAR(100),
+    stream VARCHAR(50),
+    passout INTEGER,
+    year VARCHAR(30),
+    userRole VARCHAR(20),
+    mobile VARCHAR(15),
+    aboutMe TEXT,
+    profilePic TEXT,
+    otp VARCHAR(10),
+    otpExpiry TIMESTAMP,
+    isVerified BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`;
+**/
+
 const updateUser = async (req, res) => {
-    
+    try{
+        const {id, name, email, password, stream, passout, year, userRole, mobile, aboutMe, profilePic, isVerified } = req.body;
+        const results = await models.pool.query(`UPDATE users SET name = $1, email = $2, password = $3, stream = $4, passout = $5, year = $6, userRole = $7, mobile = $8, aboutMe = $9, profilePic = $10, isVerified = $11, updated_at = CURRENT_TIMESTAMP WHERE id = $12`, [name, email, password, stream, passout, year, userRole, mobile, aboutMe, profilePic, isVerified, id]);
+        if (!results) {
+            logEntry({ user_id: 0, activity: 'Update failed for user id '+ id??0 });
+            return res.status(400).json({ message: 'Update failed' });
+        }
+        logEntry({ user_id: 0, activity: 'Update successful for user id '+ id });
+        return res.status(200).json({ message: 'Update successful' });
+    } catch (err) {
+        console.error(err);
+        logEntry({ user_id: 0, activity: 'Update failed Internal server error for user id '+(id??0)+'; err: ' + err });
+        res.status(500).json({ message: 'Internal server error' });
+    }
 }
 
 const followAlumini = async (req, res) => {

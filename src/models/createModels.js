@@ -86,6 +86,15 @@ const activityLog = `CREATE TABLE IF NOT EXISTS activity_log (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );`;
 
+const chat = `CREATE TABLE IF NOT EXISTS chat (
+    id SERIAL PRIMARY KEY NOT NULL,
+    user_id INTEGER,
+    chat_content TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);`;
+
 dbStrings.userModel = userModel;
 dbStrings.loginActivityModel = loginActivityModel;
 dbStrings.postModel = postModel;
