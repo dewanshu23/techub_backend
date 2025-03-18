@@ -35,6 +35,12 @@ app.post('/login',
     }
 );
 
+app.post('/updateProfile',
+    async (req, res) => {
+        await controllers.users.updateUser(req, res)
+    }
+);
+
 app.get('/verify-email',
     function (req, res) {
         res.send('Verify Email Page');
@@ -119,6 +125,25 @@ app.get('/unfollowStudent',
 
     async (req, res) => {
         await controllers.users.unfollowStudent(req, res)
+    }
+);
+
+// chat routes
+app.post('/chatEntry',
+    async (req, res) => {
+        await controllers.chat.chatEntry(req, res)
+    }
+);
+
+app.get('/getChatForUser',
+    async (req, res) => {
+        await controllers.chat.getChatForUser(req, res)
+    }
+);
+
+app.get('/getAllChats',
+    async (req, res) => {
+        await controllers.chat.getAllChats(req, res)
     }
 );
 

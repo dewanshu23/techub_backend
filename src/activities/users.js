@@ -86,7 +86,7 @@ const userModel = `CREATE TABLE IF NOT EXISTS users (
 const updateUser = async (req, res) => {
     try{
         const {id, name, email, password, stream, passout, year, userRole, mobile, aboutMe, profilePic, isVerified } = req.body;
-        const results = await models.pool.query(`UPDATE users SET name = $1, email = $2, password = $3, stream = $4, passout = $5, year = $6, userRole = $7, mobile = $8, aboutMe = $9, profilePic = $10, isVerified = $11, updated_at = CURRENT_TIMESTAMP WHERE id = $12`, [name, email, password, stream, passout, year, userRole, mobile, aboutMe, profilePic, isVerified, id]);
+        const results = await models.pool.query(`UPDATE users SET name = $1, email = $2, stream = $4, passout = $5, year = $6, userRole = $7, mobile = $8, aboutMe = $9, profilePic = $10, isVerified = $11, updated_at = CURRENT_TIMESTAMP WHERE id = $12`, [name, email, password, stream, passout, year, userRole, mobile, aboutMe, profilePic, isVerified, id]);
         if (!results) {
             logEntry({ user_id: 0, activity: 'Update failed for user id '+ id??0 });
             return res.status(400).json({ message: 'Update failed' });
@@ -121,5 +121,6 @@ module.exports = {
     getAllStudents,
     getAllFollowedAluminisByStudent,
     getAllFollowedStudentsByAlumini,
+    updateUser,
     followAlumini
 };

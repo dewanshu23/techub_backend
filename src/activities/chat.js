@@ -44,21 +44,33 @@ const getChatForUser = async (req, res) => {
     }
 }
 
-const getAllChat = async (req, res) => {
+const getAllChats = async (req, res) => {
     try {
         const results = await models.pool.query(`SELECT * FROM chat`);
-        if (!results) {
-            await logEntry({ user_id: 0, activity: 'No chat created yet asked by ' + req.body.id??"admin" });
+        if (!results || 1 > results.rows.length) {
+            await logEntry({ user_id: 0, activity: 'No chat created yet asked by ' + req.body.id ?? "admin" });
             return res.status(400).json({ message: 'No chat found' });
         }
-        await logEntry({ user_id: 0, activity: 'All Chat found and sent to user id ' + req.body.id??"admin" });
-        return res.status(200).json({ message: 'Chat found', chat: results.rows });
+        await logEntry({ user_id: 0, activity: 'All Chat found and sent to user id ' + req.body.id ?? "admin" });
+        let finalResp = {chats: results.rows}
+        let distinctUsers = [...new Set(results.rows.map(item => item.user_id))];
+        let users = [];
+        for (let i = 0; i < distinctUsers.length; i++) {
+            let user = await models.pool.query(`SELECT id, email, name FROM users WHERE id = $1`, [distinctUsers[i]]);
+            users.push(user.rows[0]);
+        }
+        finalResp.users = users;
+        return res.status(200).json({ message: 'Chat found', chat: finalResp });
     }
     catch (err) {
         console.error(err);
-        await logEntry({ user_id: 0, activity: 'Chat failed Internal server error; asked by ' + req.body.id??"admin" + ' err: ' + err });
+        await logEntry({ user_id: 0, activity: 'Chat failed Internal server error; asked by ' + req.body.id ?? "admin" + ' err: ' + err });
         res.status(500).json({ message: 'Internal server error' });
     }
 }
 
-module.exports = { chatEntry, getChatForUser, getAllChat };
+module.exports = { 
+    chatEntry, 
+    getChatForUser, 
+    getAllChats
+};

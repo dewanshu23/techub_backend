@@ -104,4 +104,5 @@ dbStrings.followModel = followModel;
 dbStrings.userModel = userModel;
 dbStrings.socialMediaModel = socialMediaModel;
 dbStrings.activityLog = activityLog;
+dbStrings.chat = chat;
 module.exports = dbStrings;
