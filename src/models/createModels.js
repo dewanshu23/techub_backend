@@ -12,6 +12,7 @@ const userModel = `CREATE TABLE IF NOT EXISTS users (
     mobile VARCHAR(15),
     aboutMe TEXT,
     profilePic TEXT,
+    status VARCHAR(10) DEFAULT 'a',
     otp VARCHAR(10),
     otpExpiry TIMESTAMP,
     isVerified BOOLEAN DEFAULT FALSE,

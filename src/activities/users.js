@@ -75,6 +75,7 @@ const userModel = `CREATE TABLE IF NOT EXISTS users (
     mobile VARCHAR(15),
     aboutMe TEXT,
     profilePic TEXT,
+    status varchar(10) DEFAULT 'a',   // a - active, d - deleted, b - blocked
     otp VARCHAR(10),
     otpExpiry TIMESTAMP,
     isVerified BOOLEAN DEFAULT FALSE,
@@ -82,6 +83,23 @@ const userModel = `CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );`;
 **/
+
+const updateUserStatus = async (req, res) => {
+    try{
+        const {id, status } = req.body;
+        const results = await models.pool.query(`UPDATE users SET status = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2`, [status, id]);
+        if (!results) {
+            logEntry({ user_id: 0, activity: 'Update failed for user id '+ id??0 + ' by '+ req.user.email });
+            return res.status(400).json({ message: 'Update failed' });
+        }
+        logEntry({ user_id: 0, activity: 'Update successful for user id '+ id + ' by '+ req.user.email });
+        return res.status(200).json({ message: 'Update successful' });
+    } catch (err) {
+        console.error(err);
+        logEntry({ user_id: 0, activity: 'Update failed Internal server error for user id '+(id??0)+'; err: ' + err + ' by '+ req.user.email });
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
 
 const updateUser = async (req, res) => {
     try{
@@ -116,11 +134,14 @@ const followAlumini = async (req, res) => {
     }
 }
 
+
+
 module.exports = {
     getAllAluminis,
     getAllStudents,
     getAllFollowedAluminisByStudent,
     getAllFollowedStudentsByAlumini,
     updateUser,
+    updateUserStatus,
     followAlumini
 };

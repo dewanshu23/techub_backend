@@ -41,6 +41,12 @@ app.post('/updateProfile',
     }
 );
 
+app.post('/updateUserStatus',
+    async (req, res) => {
+        await controllers.users.updateUserStatus(req, res)
+    }
+);
+
 app.get('/verify-email',
     function (req, res) {
         res.send('Verify Email Page');
