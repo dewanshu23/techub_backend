@@ -114,7 +114,7 @@ const updateUser = async (req, res) => {
         }
         logEntry({ user_id: 0, activity: 'Update successful for user id ' + id });
         console.log(results);
-        return res.status(200).json({ message: 'Update successful', success: results.rowCount>1 });
+        return res.status(200).json({ message: 'Update successful', success: results.rowCount > 0 });
     } catch (err) {
         console.error(err);
         logEntry({ user_id: 0, activity: 'Update failed Internal server error for user id ' + (id ?? 0) + '; err: ' + err });
