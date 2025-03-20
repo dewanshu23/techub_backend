@@ -1,13 +1,13 @@
 const models = require('../models/index.js');
 const logEntry = require('./logEntry.js');
 
-const getAllAluminis = async (req, res) => {
+const getAllAlumnis = async (req, res) => {
     try {
-        const results = await models.pool.query(`SELECT * FROM users WHERE userrole = 'Alumini'`);
+        const results = await models.pool.query(`SELECT * FROM users WHERE userrole = 'Alumni'`);
         if (!results) {
-            return res.status(400).json({ message: 'No alumini found' });
+            return res.status(400).json({ message: 'No alumni found' });
         }
-        return res.status(200).json({ message: 'Aluminis found', alumini: results.rows });
+        return res.status(200).json({ message: 'Alumnis found', alumni: results.rows });
     }
     catch (err) {
         console.error(err);
@@ -32,14 +32,14 @@ const getAllStudents = async (req, res) => {
     }
 }
 
-const getAllFollowedAluminisByStudent = async (req, res) => {
+const getAllFollowedAlumnisByStudent = async (req, res) => {
     try {
         let existingUser = await checkLogin(req.user.email);
-        const results = await models.pool.query(`SELECT * FROM users WHERE id IN (SELECT alumini_id FROM follow WHERE student_id = $1)`, [existingUser.id]);
+        const results = await models.pool.query(`SELECT * FROM users WHERE id IN (SELECT alumni_id FROM follow WHERE student_id = $1)`, [existingUser.id]);
         if (!results) {
-            return res.status(400).json({ message: 'No followed alumini found' });
+            return res.status(400).json({ message: 'No followed alumni found' });
         }
-        return res.status(200).json({ message: 'Followed alumini found', followed_alumini: results.rows });
+        return res.status(200).json({ message: 'Followed alumni found', followed_alumni: results.rows });
     }
     catch (err) {
         console.error(err);
@@ -47,10 +47,10 @@ const getAllFollowedAluminisByStudent = async (req, res) => {
     }
 }
 
-const getAllFollowedStudentsByAlumini = async (req, res) => {
+const getAllFollowedStudentsByAlumni = async (req, res) => {
     try {
         let existingUser = await checkLogin(req.user.email);
-        const results = await models.pool.query(`SELECT * FROM users WHERE id IN (SELECT student_id FROM follow WHERE alumini_id = $1)`, [existingUser.id]);
+        const results = await models.pool.query(`SELECT * FROM users WHERE id IN (SELECT student_id FROM follow WHERE alumni_id = $1)`, [existingUser.id]);
         if (!results) {
             return res.status(400).json({ message: 'No followed student found' });
         }
@@ -85,44 +85,45 @@ const userModel = `CREATE TABLE IF NOT EXISTS users (
 **/
 
 const updateUserStatus = async (req, res) => {
-    try{
-        const {id, status } = req.body;
+    try {
+        const { id, status } = req.body;
+        console.log(req.params)
         const results = await models.pool.query(`UPDATE users SET status = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2`, [status, id]);
         if (!results) {
-            logEntry({ user_id: 0, activity: 'Update failed for user id '+ id??0 + ' by '+ req.user.email });
+            logEntry({ user_id: 0, activity: 'Update failed for user id ' + id ?? 0 + ' by ' + req.body.email ?? "" + " to " + status });
             return res.status(400).json({ message: 'Update failed' });
         }
-        logEntry({ user_id: 0, activity: 'Update successful for user id '+ id + ' by '+ req.user.email });
+        logEntry({ user_id: 0, activity: 'Update successful for user id ' + id + ' by ' + req.body.email ?? "" + " to " + status });
         return res.status(200).json({ message: 'Update successful' });
     } catch (err) {
         console.error(err);
-        logEntry({ user_id: 0, activity: 'Update failed Internal server error for user id '+(id??0)+'; err: ' + err + ' by '+ req.user.email });
+        logEntry({ user_id: 0, activity: 'Update failed Internal server error for user id ' + (req.body.id ?? 0) + '; err: ' + err + ' by ' + req.body.email ?? "" + " to " + req.body.status ?? "" });
         res.status(500).json({ message: 'Internal server error' });
     }
 }
 
 const updateUser = async (req, res) => {
-    try{
-        const {id, name, email, password, stream, passout, year, userRole, mobile, aboutMe, profilePic, isVerified } = req.body;
+    try {
+        const { id, name, email, password, stream, passout, year, userRole, mobile, aboutMe, profilePic, isVerified } = req.body;
         const results = await models.pool.query(`UPDATE users SET name = $1, email = $2, stream = $4, passout = $5, year = $6, userRole = $7, mobile = $8, aboutMe = $9, profilePic = $10, isVerified = $11, updated_at = CURRENT_TIMESTAMP WHERE id = $12`, [name, email, password, stream, passout, year, userRole, mobile, aboutMe, profilePic, isVerified, id]);
         if (!results) {
-            logEntry({ user_id: 0, activity: 'Update failed for user id '+ id??0 });
+            logEntry({ user_id: 0, activity: 'Update failed for user id ' + id ?? 0 });
             return res.status(400).json({ message: 'Update failed' });
         }
-        logEntry({ user_id: 0, activity: 'Update successful for user id '+ id });
+        logEntry({ user_id: 0, activity: 'Update successful for user id ' + id });
         return res.status(200).json({ message: 'Update successful' });
     } catch (err) {
         console.error(err);
-        logEntry({ user_id: 0, activity: 'Update failed Internal server error for user id '+(id??0)+'; err: ' + err });
+        logEntry({ user_id: 0, activity: 'Update failed Internal server error for user id ' + (id ?? 0) + '; err: ' + err });
         res.status(500).json({ message: 'Internal server error' });
     }
 }
 
-const followAlumini = async (req, res) => {
+const followAlumni = async (req, res) => {
     try {
         let existingUser = await checkLogin(req.user.email);
-        const { alumini_id } = req.body;
-        const results = await models.pool.query(`INSERT INTO follow (student_id, alumini_id) VALUES ($1, $2)`, [existingUser.id, alumini_id]);
+        const { alumni_id } = req.body;
+        const results = await models.pool.query(`INSERT INTO follow (student_id, alumni_id) VALUES ($1, $2)`, [existingUser.id, alumni_id]);
         if (!results) {
             return res.status(400).json({ message: 'Follow failed' });
         }
@@ -137,11 +138,11 @@ const followAlumini = async (req, res) => {
 
 
 module.exports = {
-    getAllAluminis,
+    getAllAlumnis,
     getAllStudents,
-    getAllFollowedAluminisByStudent,
-    getAllFollowedStudentsByAlumini,
+    getAllFollowedAlumnisByStudent,
+    getAllFollowedStudentsByAlumni,
     updateUser,
     updateUserStatus,
-    followAlumini
+    followAlumni
 };

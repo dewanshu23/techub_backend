@@ -65,7 +65,7 @@ app.get('/reset-password',
     }
 );
 
-// post routes for alumini and student
+// post routes for alumni and student
 app.post('/post',
     async (req, res) => {
         await controllers.posts.post(req, res)
@@ -85,9 +85,9 @@ app.get('/getAllPosts',
 );
 
 // user list routes
-app.get('/getAllAluminis',
+app.get('/getAllAlumnis',
     async (req, res) => {
-        await controllers.users.getAllAluminis(req, res)
+        await controllers.users.getAllAlumnis(req, res)
     }
 );
 
@@ -97,21 +97,21 @@ app.get('/getAllStudents',
     }
 );
 
-app.get('/getAllFollowedAluminisByStudent',
+app.get('/getAllFollowedAlumnisByStudent',
     async (req, res) => {
-        await controllers.users.getAllFollowedAluminisByStudent(req, res)
+        await controllers.users.getAllFollowedAlumnisByStudent(req, res)
     }
 );
 
-app.get('/getAllFollowedStudentsByAlumini',
+app.get('/getAllFollowedStudentsByAlumni',
     async (req, res) => {
-        await controllers.users.getAllFollowedStudentsByAlumini(req, res)
+        await controllers.users.getAllFollowedStudentsByAlumni(req, res)
     }
 );
 
-app.get('/followAlumini',
+app.get('/followAlumni',
     async (req, res) => {
-        await controllers.users.followAlumini(req, res)
+        await controllers.users.followAlumni(req, res)
     }
 );
 
@@ -121,9 +121,9 @@ app.get('/followStudent',
     }
 );
 
-app.get('/unfollowAlumini',
+app.get('/unfollowAlumni',
     async (req, res) => {
-        await controllers.users.unfollowAlumini(req, res)
+        await controllers.users.unfollowAlumni(req, res)
     }
 );
 

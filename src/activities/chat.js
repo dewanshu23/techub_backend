@@ -15,7 +15,7 @@ const chatEntry = async (req, res) => {
             await logEntry({ user_id: user_id, activity: 'Chat creation failed for userid ' + user_id });
             return res.status(400).json({ message: 'Chat failed' });
         }
-        await logEntry({ user_id: user_id, activity: 'Chat successful for userid ' + user_id + ' and chatid ' + results.rows[0].id });
+        await logEntry({ user_id: user_id, activity: 'Chat successful for userid ' + user_id });
         return res.status(200).json({ message: 'Chat successful' });
     }
     catch (err) {
