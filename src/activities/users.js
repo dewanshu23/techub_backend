@@ -62,56 +62,45 @@ const getAllFollowedStudentsByAlumni = async (req, res) => {
     }
 }
 
-/** 
-const userModel = `CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY NOT NULL,
-    name VARCHAR(200),
-    email VARCHAR(100) UNIQUE,
-    password VARCHAR(100),
-    stream VARCHAR(50),
-    passout INTEGER,
-    year VARCHAR(30),
-    userRole VARCHAR(20),
-    mobile VARCHAR(15),
-    aboutMe TEXT,
-    profilePic TEXT,
-    status varchar(10) DEFAULT 'a',   // a - active, d - deleted, b - blocked
-    otp VARCHAR(10),
-    otpExpiry TIMESTAMP,
-    isVerified BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);`;
-**/
-
 const updateUserStatus = async (req, res) => {
+    const { id, status } = req.query;
+    const {doer, email , userrole} = req.body;
     try {
-        const { id, status } = req.body;
-        console.log(req.params)
         const results = await models.pool.query(`UPDATE users SET status = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2`, [status, id]);
         if (!results) {
-            logEntry({ user_id: 0, activity: 'Update failed for user id ' + id ?? 0 + ' by ' + req.body.email ?? "" + " to " + status });
+            logEntry({ user_id: 0, activity: 'Update failed for user id ' + id ?? 0 + ' by ' + email ?? "" + " id " + doer + " to " + status });
             return res.status(400).json({ message: 'Update failed' });
         }
-        logEntry({ user_id: 0, activity: 'Update successful for user id ' + id + ' by ' + req.body.email ?? "" + " to " + status });
+        logEntry({ user_id: 0, activity: 'Update successful for user id ' + id??0 + ' by ' + email ?? "" + " id " + doer + " to " + status });
         return res.status(200).json({ message: 'Update successful' });
     } catch (err) {
         console.error(err);
-        logEntry({ user_id: 0, activity: 'Update failed Internal server error for user id ' + (req.body.id ?? 0) + '; err: ' + err + ' by ' + req.body.email ?? "" + " to " + req.body.status ?? "" });
+        logEntry({ user_id: 0, activity: 'Update failed Internal server error for user id ' + id + '; err: ' + err + ' by ' + email ?? "" + " id " + doer + " to " + req.body.status ?? "" });
         res.status(500).json({ message: 'Internal server error' });
     }
 }
 
 const updateUser = async (req, res) => {
+    const id = req.body.id;
+    const name = req.body.name;
+    const email = req.body.email;
+    const stream = req.body.stream;
+    const passout = req.body.passout;
+    const year = req.body.year;
+    const userRole = req.body.userrole;
+    const mobile = req.body.mobile;
+    const aboutMe = req.body.aboutMe;
+    const profilePic = req.body.profilepic;
+    const isVerified = req.body.isperified;
     try {
-        const { id, name, email, password, stream, passout, year, userRole, mobile, aboutMe, profilePic, isVerified } = req.body;
-        const results = await models.pool.query(`UPDATE users SET name = $1, email = $2, stream = $4, passout = $5, year = $6, userRole = $7, mobile = $8, aboutMe = $9, profilePic = $10, isVerified = $11, updated_at = CURRENT_TIMESTAMP WHERE id = $12`, [name, email, password, stream, passout, year, userRole, mobile, aboutMe, profilePic, isVerified, id]);
+        const results = await models.pool.query(`UPDATE users SET name = $1, email = $2, stream = $3, passout = $4, year = $5, userRole = $6, mobile = $7, aboutMe = $8, profilePic = $9, isVerified = $10, updated_at = CURRENT_TIMESTAMP WHERE id = $11`, [name, email, stream, passout, year, userRole, mobile, aboutMe, profilePic, isVerified, id]);
         if (!results) {
             logEntry({ user_id: 0, activity: 'Update failed for user id ' + id ?? 0 });
             return res.status(400).json({ message: 'Update failed' });
         }
         logEntry({ user_id: 0, activity: 'Update successful for user id ' + id });
-        return res.status(200).json({ message: 'Update successful' });
+        console.log(results);
+        return res.status(200).json({ message: 'Update successful', success: results.rowCount>1 });
     } catch (err) {
         console.error(err);
         logEntry({ user_id: 0, activity: 'Update failed Internal server error for user id ' + (id ?? 0) + '; err: ' + err });
