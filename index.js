@@ -14,7 +14,7 @@ models.processIndexFile().then(() => {
 app.use(cors());
 app.use(express.json(
 ));  // For JSON bodies
-app.use(express.urlencoded({ extended: true })); // For URL-encoded bodies
+app.use(express.urlencoded({extended: true})); // For URL-encoded bodies
 // app.use(express.static('public')); // For serving static files
 //connect routes from routes folder
 app.set('port', 7070);
@@ -85,6 +85,12 @@ app.get('/getAllPosts',
 );
 
 // user list routes
+app.get('/getAllUsers',
+    async (req, res) => {
+        await controllers.users.getAllUsers(req, res)
+    }
+);
+
 app.get('/getAllAlumnis',
     async (req, res) => {
         await controllers.users.getAllAlumnis(req, res)

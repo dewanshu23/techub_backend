@@ -1,6 +1,20 @@
 const models = require('../models/index.js');
 const logEntry = require('./logEntry.js');
 
+const getAllUsers = async (req, res) => {
+    try {
+        const results = await models.pool.query(`SELECT * FROM users WHERE userrole not in ('Admin')`);
+        if (!results) {
+            return res.status(400).json({ message: 'No User found' });
+        }
+        return res.status(200).json({ message: 'Users found', alumni: results.rows });
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
 const getAllAlumnis = async (req, res) => {
     try {
         const results = await models.pool.query(`SELECT * FROM users WHERE userrole = 'Alumni'`);
@@ -127,6 +141,7 @@ const followAlumni = async (req, res) => {
 
 
 module.exports = {
+    getAllUsers,
     getAllAlumnis,
     getAllStudents,
     getAllFollowedAlumnisByStudent,
