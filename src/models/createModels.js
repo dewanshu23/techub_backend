@@ -15,6 +15,8 @@ const userModel = `CREATE TABLE IF NOT EXISTS users (
     status VARCHAR(10) DEFAULT 'a',
     otp VARCHAR(10),
     otpExpiry TIMESTAMP,
+    linkedin VARCHAR(50),
+    twitter VARCHAR(50),
     isVerified BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
