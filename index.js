@@ -68,19 +68,19 @@ app.get('/reset-password',
 // post routes for alumni and student
 app.post('/post',
     async (req, res) => {
-        await controllers.posts.post(req, res)
-    }
-);
-
-app.get('/getPostsForUser',
-    async (req, res) => {
-        await controllers.posts.getPostsForUser(req, res)
+        await controllers.posts.createPost(req, res)
     }
 );
 
 app.get('/getAllPosts',
     async (req, res) => {
         await controllers.posts.getAllPosts(req, res)
+    }
+);
+
+app.get('/getAllPostsByType',
+    async (req, res) => {
+        await controllers.posts.getAllPostsByType(req, res)
     }
 );
 
