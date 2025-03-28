@@ -21,8 +21,6 @@ const signup = async (req, res) => {
             await logEntry({user_id: 0, activity: 'Signup failed Validation error'});
             return res.status(400).json({message: resultValidation.error.details.map(x => x.message).join(', ')});
         }
-        console.log("validated");
-        console.log(req.body);
         // body conatains name, email, password, stream, passout, year, userrole, isverified fields 
         const {name, email, password, stream, passout, year, userRole} = req.body;
 
@@ -42,13 +40,11 @@ const signup = async (req, res) => {
         let client = await models.pool.connect();
         let results = await client.query(query, [name, email, hashedPassword, stream, passout, year, userRole]);
         client.release();
-        console.log(results);
         if (results.rowCount === 0) {
             await logEntry({user_id: 0, activity: 'Signup failed Email ' + email + ' not created'});
             return res.status(400).json({message: 'User not created'});
         }
 
-        // get new user in db for login activity
         query = `SELECT *
                  FROM users
                  WHERE email = $1`;

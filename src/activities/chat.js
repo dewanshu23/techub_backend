@@ -3,12 +3,7 @@ const logEntry = require('./logEntry.js');
 
 const chatEntry = async (req, res) => {
     try {
-        // body conatains email, password fields 
-        console.log(req.body);
         const {chat_content, user_id} = req.body;
-        console.log(chat_content, user_id);
-        // Check for existing user
-        // let existingUser = await checkLogin(req.user.email);
         const results = await models.pool.query(`INSERT INTO chat (user_id, chat_content)
                                                  VALUES ($1, $2)`, [user_id, chat_content]);
         if (!results) {

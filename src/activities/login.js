@@ -58,7 +58,6 @@ const login = async (req, res) => {
 
 const checkUser = async (email) => {
     try {
-        // Check for existing user in db if exists
         const query = `SELECT * FROM users WHERE email = $1`;
         const client = await models.pool.connect();
         const results = await client.query(query, [email]);

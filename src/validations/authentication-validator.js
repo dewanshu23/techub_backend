@@ -12,30 +12,22 @@ const userAccountSignupSchema = Joi.object({
     userRole: Joi.string().valid("Student", "Alumni", "Admin", "Teacher").required(),
     passout: Joi.number().max(2024).min(1980).required(),
     year: Joi.string().valid("First Year", "Second Year", "Third Year", "Pass Out").required(),
+    mobile: Joi.string().min(10).max(15).optional(),
+    aboutMe: Joi.string().max(500).optional(),
+    profilePic: Joi.string().optional(),
+    status: Joi.string().valid("a", "inactive").optional(),
+    otp: Joi.string().optional(),
+    otpExpiry: Joi.date().optional(),
+    linkedin: Joi.string().uri().optional(),
+    twitter: Joi.string().uri().optional(),
+    isVerified: Joi.boolean().optional()
 });
 const userAccountLoginSchema = Joi.object({
     email: Joi.string().label("Email").required(),
     password: Joi.string().required(),
 });
-const sendOtpSchema = Joi.object({
-    email: Joi.string().required()
-});
-const verifyOtpSchema = Joi.object({
-    email: Joi.string().required(),
-    otp: Joi.string().length(4).required(),
-    password: Joi.string().required(),
-    confirmPassword: Joi.string().required().valid(Joi.ref("password")).label("Confirm password").error(() => 'password and Confirm password not same.'),
-});
-const changePasswordSchema = Joi.object({
-    currentPassword: Joi.string().required(),
-    password: Joi.string().required(),
-    confirmPassword: Joi.string().required().valid(Joi.ref("password")).label("Confirm password").error(() => 'password and Confirm password not same.')
-});
-const post = Joi.object({})
+
 module.exports = {
     userAccountSignupSchema,
-    userAccountLoginSchema,
-    changePasswordSchema,
-    sendOtpSchema,
-    verifyOtpSchema
+    userAccountLoginSchema
 }

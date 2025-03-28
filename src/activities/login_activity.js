@@ -6,7 +6,6 @@ const loginActivity = async (data) => {
                                                  VALUES ($1)`,
             [data.id]
         );
-        console.log("loginActivity: ", results);
         return (results.rowCount > 0) ?? 0;
     } catch (err) {
         console.error(err);
@@ -16,7 +15,6 @@ const loginActivity = async (data) => {
 
 const logoutActivity = async (data) => {
     try {
-        // Check if user has an active session (logout_time is NULL)
         const check = await models.pool.query(
             `SELECT *
              FROM login_activity
@@ -26,16 +24,10 @@ const logoutActivity = async (data) => {
             [data.id]
         );
 
-        console.log("check: ", check);
-
-        // If no active session found, return null
         if (!check || check.rowCount === 0) {
             return false;
         }
 
-        console.log("Logout activity found for user_id: " + data.id);
-
-        // Update logout_time for the latest active session
         const results = await models.pool.query(
             `UPDATE login_activity
              SET logout_time = CURRENT_TIMESTAMP
@@ -47,8 +39,6 @@ const logoutActivity = async (data) => {
                  )`,
             [data.id]
         );
-
-        console.log("logoutActivity: ", results);
 
         return true;
     } catch (err) {
@@ -65,12 +55,9 @@ const checkLoginActivity = async (data) => {
                                                  AND logout_time IS NULL
                                                ORDER BY id DESC LIMIT 1`, [data.id]
         );
-        console.log("checkLoginActivity: ", check);
         if (!check || check.rowCount === 0) {
-            console.log("No login activity found for user_id: " + data.id);
             return false;
         }
-        console.log("Login activity found for user_id: " + data.id);
         return true;
 
     } catch (err) {

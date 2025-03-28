@@ -6,7 +6,7 @@ let pool = new Pool({
     user: "postgres",
     password: 'sith1234',//change according to your password TODO: change to basic
     host: "localhost",
-    database: "test_techub",
+    database: "mydb",
     port: 5432,
     max: 1000,
     logging: false,
@@ -36,13 +36,8 @@ async function executeSQLCreate(sql, key) {
 
 async function processIndexFile() {
     const dbScripts = dbStrings;
-    // console.log("Processing index file");
-    // console.log("dbScripts", dbScripts);
     for (const key in dbScripts) {
-        // console.log("Key", key);
         const sql = dbScripts[key];
-        // console.log("Key", key);
-        // console.log("SQL", sql);
         await executeSQLCreate(sql, key);
     }
 }
