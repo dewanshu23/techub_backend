@@ -13,7 +13,7 @@ const login = async (req, res) => {
         // Check for existing user
         existingUser = await checkUser(email);
         if (!existingUser) {
-            await logEntry({user_id: 0, activity: 'Login failed Email ' + email + ' does not exist'});
+            await logEntry({user_id: 1, activity: 'Login failed Email ' + email + ' does not exist'});
             return res.status(400).json({message: 'Email does not exist'});
         }
         // Check if password is correct
