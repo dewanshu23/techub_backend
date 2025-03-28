@@ -31,7 +31,13 @@ app.post('/signup',
 );
 app.post('/login',
     async (req, res) => {
-        await controllers.login(req, res)
+        await controllers.login.login(req, res)
+    }
+);
+
+app.post('/logout',
+    async (req, res) => {
+        await controllers.login.logout(req, res)
     }
 );
 
@@ -81,6 +87,18 @@ app.get('/getAllPosts',
 app.get('/getAllPostsByType',
     async (req, res) => {
         await controllers.posts.getAllPostsByType(req, res)
+    }
+);
+
+app.post('/updatePost',
+    async (req, res) => {
+        await controllers.posts.updatePost(req, res)
+    }
+);
+
+app.get('/deletePost',
+    async (req, res) => {
+        await controllers.posts.deletePost(req, res)
     }
 );
 
@@ -159,6 +177,14 @@ app.get('/getAllChats',
     }
 );
 
+// activity log routes
+app.get('/activityLogByUser',
+    async (req, res) => {
+        await controllers.userActivity(req, res)
+    }
+);
+
+// general listening route
 app.listen(app.get('port'),
     function () {
         console.log('Express server listening on port ' + app.get('port'));

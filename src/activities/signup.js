@@ -38,7 +38,7 @@ const signup = async (req, res) => {
 
         // Create a new user
         let query = `INSERT INTO users (name, email, password, stream, passout, year, userrole, isverified)
-                       VALUES ($1, $2, $3, $4, $5, $6, $7, false)`;
+                     VALUES ($1, $2, $3, $4, $5, $6, $7, false)`;
         let client = await models.pool.connect();
         let results = await client.query(query, [name, email, hashedPassword, stream, passout, year, userRole]);
         client.release();
@@ -59,7 +59,6 @@ const signup = async (req, res) => {
         res.status(201).json({message: 'User created successfully'});
     } catch (err) {
         console.error(err);
-        await logEntry({user_id: 0, activity: 'Signup failed Internal server error'});
         res.status(500).json({message: 'Internal server error'});
     }
 };

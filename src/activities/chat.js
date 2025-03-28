@@ -1,4 +1,3 @@
-const e = require('express');
 const models = require('../models/index.js');
 const logEntry = require('./logEntry.js');
 
@@ -20,7 +19,6 @@ const chatEntry = async (req, res) => {
         return res.status(200).json({message: 'Chat successful'});
     } catch (err) {
         console.error(err);
-        await logEntry({user_id: 0, activity: 'Chat failed Internal server error; err: ' + err});
         res.status(500).json({message: 'Internal server error'});
     }
 }

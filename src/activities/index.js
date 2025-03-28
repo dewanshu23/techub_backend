@@ -3,7 +3,7 @@ const login = require('./login');
 const posts = require('./posts');
 const users = require('./users');
 const chat = require('./chat');
-// const loginActivity = require('./login_activity');
+const userActivity = require('./user_activity');
 // const forgotPassword = require('./forgot-password');
 // const resetPassword = require('./reset-password');
 // const verifyEmail = require('./verify-email');
@@ -17,7 +17,8 @@ module.exports = {
     login,
     posts,
     users,
-    chat
+    chat,
+    userActivity
     // forgotPassword,
     // resetPassword,
     // verifyEmail,
