@@ -38,6 +38,25 @@ app.post('/logout',
     }
 );
 
+
+app.post('changePassword',
+    async (req, res) => {
+        await controllers.login.changePassword(req, res)
+    }
+);
+
+app.post('/forgotPassword',
+    async (req, res) => {
+        await controllers.login.forgotPassword(req, res)
+    }
+);
+
+app.post('/resetPassword',
+    async (req, res) => {
+        await controllers.login.resetPassword(req, res)
+    }
+);
+
 app.post('/updateProfile',
     async (req, res) => {
         await controllers.users.updateUser(req, res)
