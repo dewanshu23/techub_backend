@@ -6,8 +6,8 @@ let pool = new Pool({
     user: "postgres",
     password: 'root',//change according to your password TODO: change to basic
     host: "localhost",
-    database: "techub",
-    port: 5433,
+    database: "mydb",
+    port: 5432,
     max: 1000,
     logging: false,
     dialect: 'postgres',
