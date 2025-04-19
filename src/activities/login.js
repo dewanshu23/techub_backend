@@ -96,11 +96,11 @@ const changePassword = async (req, res) => {
         const {email, old_password, new_password} = req.body;
 
         const user = await checkUser(email);
-        if (!user) return res.status(400).json({message: 'User does not exist'});
-        if (user.status === 'b') return res.status(403).json({message: 'Account is blocked'});
+        if (!user) return res.status(400).json({success: false, message: 'User does not exist'});
+        if (user.status === 'b') return res.status(403).json({success: false, message: 'Account is blocked'});
 
         const isMatch = await bcrypt.compare(old_password, user.password);
-        if (!isMatch) return res.status(400).json({message: 'Old password is incorrect'});
+        if (!isMatch) return res.status(400).json({success: false, message: 'Old password is incorrect'});
 
         const hashedPassword = await bcrypt.hash(new_password, 10);
         const query = `UPDATE users
@@ -112,10 +112,10 @@ const changePassword = async (req, res) => {
         client.release();
 
         await logEntry({user_id: user.id, activity: `Password changed for user ${email}`});
-        res.status(200).json({message: 'Password changed successfully'});
+        res.status(200).json({success: true, message: 'Password changed successfully'});
     } catch (err) {
         console.error(err);
-        res.status(500).json({message: 'Internal server error'});
+        res.status(500).json({success: false, message: 'Internal server error'});
     }
 };
 
@@ -123,8 +123,8 @@ const forgotPassword = async (req, res) => {
     try {
         const {email} = req.body;
         const user = await checkUser(email);
-        if (!user) return res.status(400).json({message: 'Email does not exist'});
-        if (user.status === 'b') return res.status(403).json({message: 'Your account is blocked'});
+        if (!user) return res.status(400).json({success: false, message: 'Email does not exist'});
+        if (user.status === 'b') return res.status(403).json({success: false, message: 'Your account is blocked'});
 
         const otp = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
         const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // valid for 10 minutes
@@ -137,14 +137,14 @@ const forgotPassword = async (req, res) => {
         await client.query(query, [otp, otpExpiry, email]);
         client.release();
 
-        // TODO: Send OTP to user.email (mock/log here for now)
+        // Send OTP to user (here for now)
         console.log(`OTP for ${email} is ${otp}`);
 
         await logEntry({user_id: user.id, activity: `OTP sent to ${email}`});
-        res.status(200).json({message: 'OTP sent to your email'});
+        res.status(200).json({success: true, message: 'OTP sent to your email'});
     } catch (err) {
         console.error(err);
-        res.status(500).json({message: 'Internal server error'});
+        res.status(500).json({success: false, message: 'Internal server error'});
     }
 };
 
@@ -152,11 +152,11 @@ const resetPassword = async (req, res) => {
     try {
         const {email, otp, new_password} = req.body;
         const user = await checkUser(email);
-        if (!user) return res.status(400).json({message: 'Email does not exist'});
-        if (user.status === 'b') return res.status(403).json({message: 'Your account is blocked'});
+        if (!user) return res.status(400).json({success: false, message: 'Email does not exist'});
+        if (user.status === 'b') return res.status(403).json({success: false, message: 'Your account is blocked'});
 
-        if (user.otp !== otp) return res.status(400).json({message: 'Invalid OTP'});
-        if (new Date(user.otpExpiry) < new Date()) return res.status(400).json({message: 'OTP has expired'});
+        if (user.otp !== otp) return res.status(400).json({success: false, message: 'Invalid OTP'});
+        if (new Date(user.otpExpiry) < new Date()) return res.status(400).json({success: false, message: 'OTP has expired'});
 
         const hashedPassword = await bcrypt.hash(new_password, 10);
         const query = `UPDATE users
@@ -172,10 +172,10 @@ const resetPassword = async (req, res) => {
         await logEntry({user_id: user.id, activity: `Password reset for user ${email}`});
         const JWT_SECRET = 'secretkey';
         const token = JWT.sign({email: user.email}, JWT_SECRET, {expiresIn: '168h'});
-        res.status(200).json({message: 'Password reset successfully', token});
+        res.status(200).json({success: true, message: 'Password reset successfully', token});
     } catch (err) {
         console.error(err);
-        res.status(500).json({message: 'Internal server error'});
+        res.status(500).json({success: false, message: 'Internal server error'});
     }
 };
 
