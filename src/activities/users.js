@@ -83,7 +83,7 @@ const updateUser = async (req, res) => {
     const linkedin = req.body.linkedin;
     const twitter = req.body.twitter;
     try {
-        const results = await models.pool.query(`UPDATE users SET name = $1, email = $2, stream = $3, passout = $4, year = $5, userRole = $6, mobile = $7, aboutMe = $8, profilePic = $9, isVerified = $10, linkedin = $11, twitter = $12 updated_at = CURRENT_TIMESTAMP WHERE id = $13`, [name, email, stream, passout, year, userRole, mobile, aboutMe, profilePic, isVerified, linkedin, twitter, id]);
+        const results = await models.pool.query(`UPDATE users SET name = $1, email = $2, stream = $3, passout = $4, year = $5, userRole = $6, mobile = $7, aboutMe = $8, profilePic = $9, isVerified = $10, linkedin = $11, twitter = $12, updated_at = CURRENT_TIMESTAMP WHERE id = $13`, [name, email, stream, passout, year, userRole, mobile, aboutMe, profilePic, isVerified, linkedin, twitter, id]);
         if (!results) {
             await logEntry({user_id: id ?? 0, activity: 'Update failed for user id ' + id ?? 0});
             return res.status(400).json({message: 'Update failed'});
