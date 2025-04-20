@@ -106,9 +106,9 @@ const changePassword = async (req, res) => {
         const query = `UPDATE users
                        SET password   = $1,
                            updated_at = NOW()
-                       WHERE email = $2`;
+                       WHERE id = $2`;
         const client = await models.pool.connect();
-        await client.query(query, [hashedPassword, email]);
+        await client.query(query, [hashedPassword, user.id]);
         client.release();
 
         await logEntry({user_id: user.id, activity: `Password changed for user ${email}`});
