@@ -7,10 +7,10 @@ const chatEntry = async (req, res) => {
         const results = await models.pool.query(`INSERT INTO chat (user_id, chat_content)
                                                  VALUES ($1, $2)`, [user_id, chat_content]);
         if (!results) {
-            await logEntry({user_id: user_id, activity: 'Chat creation failed for userid ' + user_id});
+            await logEntry({user_id: user_id ?? 0, activity: 'Chat creation failed for userid ' + user_id});
             return res.status(400).json({message: 'Chat failed'});
         }
-        await logEntry({user_id: user_id, activity: 'Chat successful for userid ' + user_id});
+        await logEntry({user_id: user_id ?? 0, activity: 'Chat successful for userid ' + user_id});
         return res.status(200).json({message: 'Chat successful'});
     } catch (err) {
         console.error(err);

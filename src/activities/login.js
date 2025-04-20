@@ -13,7 +13,7 @@ const login = async (req, res) => {
         // Check for existing user
         existingUser = await checkUser(email);
         if (!existingUser) {
-            await logEntry({user_id: 1, activity: 'Login failed Email ' + email + ' does not exist'});
+            await logEntry({user_id: 0, activity: 'Login failed Email ' + email + ' does not exist'});
             return res.status(400).json({message: 'Email does not exist'});
         }
         // Check if password is correct
@@ -80,10 +80,10 @@ const logout = async (req, res) => {
         const user_id = req.body.id;
         var resp = await loginActivity.logoutActivity({id: user_id});
         if (resp === false) {
-            logEntry({user_id: user_id, activity: 'User not logged in'});
+            logEntry({user_id: user_id ?? 0, activity: 'User not logged in'});
             return res.status(400).json({message: 'User not logged in'});
         }
-        await logEntry({user_id: user_id, activity: 'Logout successful for user_id ' + user_id});
+        await logEntry({user_id: user_id ?? 0, activity: 'Logout successful for user_id ' + user_id});
         res.status(200).json({message: 'Logout successful'});
     } catch (err) {
         console.error(err);
